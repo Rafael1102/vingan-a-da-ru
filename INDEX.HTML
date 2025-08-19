@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ruany é Linda?</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+            background-color: #f9f0ff;
+            transition: background-color 0.5s;
+        }
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        h1 {
+            color: #8a2be2;
+        }
+        button {
+            background-color: #8a2be2;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: transform 0.2s;
+        }
+        button:hover {
+            background-color: #7b1fa2;
+            transform: scale(1.05);
+        }
+        button:active {
+            transform: scale(0.95);
+        }
+        .presente {
+            width: 200px;
+            height: 200px;
+            margin: 20px auto;
+            background-color: #ff4081;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 24px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        .error {
+            color: #ff4081;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            animation: confetti-fall 5s linear forwards;
+        }
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            10% { transform: translateX(-10px); }
+            20% { transform: translateX(10px); }
+            30% { transform: translateX(-10px); }
+            40% { transform: translateX(10px); }
+            50% { transform: translateX(-10px); }
+            60% { transform: translateX(10px); }
+            70% { transform: translateX(-10px); }
+            80% { transform: translateX(10px); }
+            90% { transform: translateX(-10px); }
+            100% { transform: translateX(0); }
+        }
+        .shake {
+            animation: shake 0.5s;
+        }
+        .error-bg {
+            background-color: #ffdddd;
+        }
+    </style>
+</head>
+<body id="body">
+    <div class="container" id="container">
+        <h1>Ruany é Linda?</h1>
+        <p>Responda com sinceridade:</p>
+        
+        <button onclick="resposta(true)">SIM</button>
+        <button onclick="resposta(false)">NÃO</button>
+        
+        <div id="resultado"></div>
+    </div>
+    <script>
+        // Função que responde ao clique nos botões
+        function resposta(resposta) {
+            const resultadoDiv = document.getElementById('resultado');
+            const body = document.getElementById('body');
+            const container = document.getElementById('container');
+            
+            // Limpa qualquer estado anterior
+            body.classList.remove('error-bg');
+            resultadoDiv.innerHTML = '';
+            
+            if (resposta) {
+                // Resposta SIM - Mostra presente e confete
+                resultadoDiv.innerHTML = `
+                    <div class="presente">
+                        Ta ai palhaça! Ruany é LINDA!
+                    </div>
+                `;
+                
+                // Cria confete
+                createConfetti();
+                
+            } else {
+                // Resposta NÃO - Efeito de erro
+                resultadoDiv.innerHTML = `
+                    <p class="error">Ta cego? Tente de novo.</p>
+                    <a href="https://www.instagram.com/ruany.borges?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==">Mas antes olha DNV essa Hiena</a>
+                `;
+                
+                // Adiciona classes para animação de erro
+                container.classList.add('shake');
+                body.classList.add('error-bg');
+                
+                // Remove a classe de shake após a animação terminar
+                setTimeout(() => {
+                    container.classList.remove('shake');
+                }, 500);
+                
+                // Faz o texto piscar
+                let count = 0;
+                const blinkInterval = setInterval(() => {
+                    resultadoDiv.style.visibility = resultadoDiv.style.visibility === 'hidden' ? 'visible' : 'hidden';
+                    count++;
+                    if (count === 6) {
+                        clearInterval(blinkInterval);
+                        resultadoDiv.style.visibility = 'visible';
+                    }
+                }, 300);
+            }
+        }
+        
+        // Função que cria os confetes (já existente no seu código)
+        function createConfetti() {
+            const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
+            
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                
+                // Posição aleatória no topo da tela
+                const startX = Math.random() * window.innerWidth;
+                confetti.style.left = `${startX}px`;
+                confetti.style.top = '0'; // Garante que começa no topo
+                
+                // Cor aleatória
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.backgroundColor = color;
+                
+                // Tamanho aleatório
+                const size = Math.random() * 10 + 5;
+                confetti.style.width = `${size}px`;
+                confetti.style.height = `${size}px`;
+                
+                // Duração e atraso aleatórios
+                const duration = Math.random() * 3 + 2;
+                const delay = Math.random() * 2;
+                confetti.style.animationDuration = `${duration}s`;
+                confetti.style.animationDelay = `${delay}s`;
+                
+                // Forma aleatória (círculo ou quadrado)
+                if (Math.random() > 0.5) {
+                    confetti.style.borderRadius = '50%';
+                }
+                
+                document.body.appendChild(confetti);
+                
+                // Remove o confete após a animação terminar
+                setTimeout(() => {
+                    confetti.remove();
+                }, (duration + delay) * 1000);
+            }
+        }
+    </script>
+</body>
+</html>
